@@ -19,14 +19,36 @@ namespace ExcelWinForm
         public static int staticRow; // число колонок в Excel
         private void button1_Click(object sender, EventArgs e)
         {
-            //string fullfilename2007 = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Saved Excel results.xlsx");
-            System.Diagnostics.Process[] objProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-            //try
-            //{
-            //    if (System.IO.File.Exists(fullfilename2007)) System.IO.File.Delete(fullfilename2007);
-            //}
-            //catch (Exception)
-            //{
+
+            //проверка на пустые поля
+            if(txtCurrPath.Text == "")
+            {
+                MessageBox.Show("Error. Empty Excel path. Fill it and try again");
+                return;
+            }
+            else if (txtGroupCount.Text == "")
+            {
+                MessageBox.Show("Error. Emty field Group count. Fill it and try again");
+                return;
+            }
+
+            //предупреждение о закрытии Excel
+            DialogResult result = MessageBox.Show(
+       "All Excel files will be closed.Continue?",
+       "Warning!",
+       MessageBoxButtons.OKCancel,
+       MessageBoxIcon.Information,
+       MessageBoxDefaultButton.Button1,
+       MessageBoxOptions.DefaultDesktopOnly);
+
+            if (result == DialogResult.Cancel)
+            {
+                return;
+            }
+
+                System.Diagnostics.Process[] objProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL");
+
+            //Закрытие всех Excel
 
                 if (objProcess.Length > 0)
                 {
@@ -43,11 +65,6 @@ namespace ExcelWinForm
                     objProcess = null;
                 }
             //}
-
-
-
-
-
 
             Application ObjWorkExcel = null;
             Workbook ObjWorkBook = null;
@@ -191,17 +208,8 @@ namespace ExcelWinForm
                     wrongItemList.Add(new List<int>());
                 }
 
-                //count = 0;
-
-                //int currValue = 3; // текущая оценка
-                //int currGroup = 0; // текущая группа
                 int countI = 0; // номер строки
-                //bool flag = true; // есть свободные ячейки
-                //int id = 0; // идентификатор для Excel
-                //int listId = 0; // идентификатор для List
-                //int countId = 0; //переменная для подсчета идентификатора
-                //int changeCount = 0; // переменная для смены группы
-                //bool flagValue = false; // для count == -2
+
 
                 int[,] arrAllMarks = new int[groupCount, (int)lastCell.Column - n]; // Общее количество оценок для каждой отсортированной колонки
 
@@ -275,51 +283,23 @@ namespace ExcelWinForm
                     count = count + (int)lastCell.Column - n + 1;
                     countI++;
                 }
-
-                //Открытие Excel
-                //ObjWorkExcel.Visible = true;
-                //ObjWorkExcel.UserControl = true;
-                //ObjWorkBook.Save();
-                //string fullfilename2007 = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "Saved Excel results.xlsx");
-                //try
-                //{
-                //if (System.IO.File.Exists(fullfilename2007)) System.IO.File.Delete(fullfilename2007);
-                //}
-                //catch (Exception)
-                //{
-                //    System.Diagnostics.Process[] objProcess = System.Diagnostics.Process.GetProcessesByName("EXCEL");
-
-                //    if (objProcess.Length > 0)
-                //    {
-                //        System.Collections.Hashtable objHashtable = new System.Collections.Hashtable();
-
-                //        // check to kill the right process
-                //        foreach (System.Diagnostics.Process processInExcel in objProcess)
-                //        {
-                //            if (objHashtable.ContainsKey(processInExcel.Id) == false)
-                //            {
-                //                processInExcel.Kill();
-                //            }
-                //        }
-                //        objProcess = null;
-                //    }
-                //}
-
-                //ObjWorkBook.SaveAs(fullfilename2007, Excel.XlFileFormat.xlWorkbookDefault);
+    
 
                 using (SaveFileDialog saveFileDialog = new SaveFileDialog())
                 {
-                    saveFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+                    saveFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.xlsm";
                     saveFileDialog.ShowDialog();
                     string filePath = saveFileDialog.FileName;
+                    if (filePath == "")
+                    {
+                        MessageBox.Show("Your data weren't saved. Press Enter to end the program");
+                            return;
+                    }
                     ObjWorkBook.SaveAs(filePath, Excel.XlFileFormat.xlWorkbookDefault);
                     MessageBox.Show($"Success.Results were saved in the\n{filePath}");
+
                 }
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("Success\nResults were saved in the file 'Saved Excel results.xlsx'");
-                Console.ResetColor();
-                Console.WriteLine("Press Enter to end the program");
-                //MessageBox.Show("Success");
+                
             }
             catch (Exception ex)
             {
@@ -385,7 +365,7 @@ namespace ExcelWinForm
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
-                openFileDialog.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+                openFileDialog.Filter = "Excel Files|*.xlsx;*.xls;*.xlsm";
                 openFileDialog.ShowDialog();
                 string filePath = openFileDialog.FileName;
                 txtCurrPath.Text = filePath;

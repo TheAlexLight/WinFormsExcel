@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ExcelWinForm
 { 
@@ -429,20 +430,22 @@ namespace ExcelWinForm
 
         public static void PrintCatchedMessages(string redStr, string yellowStr)
         {
-            Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет
-            Console.WriteLine(redStr);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(yellowStr);
-            Console.ResetColor();
+            //Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет
+            //Console.WriteLine(redStr);
+            //Console.ForegroundColor = ConsoleColor.Yellow;
+            //Console.WriteLine(yellowStr);
+            //Console.ResetColor();
+            MessageBox.Show($"{redStr}.{yellowStr}");
         }
         public static void PrintCatchedMessages(string redStr1, Exception ex, string yellowStr)
         {
-            Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет
-            Console.WriteLine(redStr1);
-            Console.WriteLine(ex.Message);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine(yellowStr);
-            Console.ResetColor();
+            //Console.ForegroundColor = ConsoleColor.Red; // устанавливаем цвет
+            //Console.WriteLine(redStr1);
+            //Console.WriteLine(ex.Message);
+            //Console.ForegroundColor = ConsoleColor.Yellow;
+            //Console.WriteLine(yellowStr);
+            //Console.ResetColor();
+            MessageBox.Show($"{redStr1}.\n {ex.Message}\n{yellowStr}");
         }
     }
 }
